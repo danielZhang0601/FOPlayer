@@ -33,4 +33,5 @@ include $(PREBUILT_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := showYUV
 LOCAL_SRC_FILES := ShowYUV.cpp
+LOCAL_LDLIBS    := -llog -lGLESv2
 include $(BUILD_SHARED_LIBRARY)
