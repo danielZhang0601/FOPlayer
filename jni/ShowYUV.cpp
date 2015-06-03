@@ -14,6 +14,8 @@
 #define ATTRIB_VERTEX 3
 #define ATTRIB_TEXTURE 4
 
+const int pixel_w = 320, pixel_h = 180;
+
 static void printGLString(const char *name, GLenum s) {
 	const char *v = (const char *) glGetString(s);
 	LOGI("GL %s = %s\n", name, v);
@@ -117,13 +119,52 @@ GLuint createProgram(const char* pVertexSource, const char* pFragmentSource) {
 	return program;
 }
 
+FILE *fp = NULL;
+unsigned char buf[pixel_w * pixel_h * 3 / 2];
+unsigned char *plane[3];
 GLuint gProgram;
 GLuint id_y, id_u, id_v; // Texture id
 GLuint textureUniformY, textureUniformU, textureUniformV;
 
 JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeDrawFrame(
 		JNIEnv *env, jclass clazz) {
+	if (fread(buf, 1, pixel_w * pixel_h * 3 / 2, fp)
+			!= pixel_w * pixel_h * 3 / 2) {
+		LOGE("read end.Again.");
+		fseek(fp, 0, SEEK_SET);
+		fread(buf, 1, pixel_w * pixel_h * 3 / 2, fp);
+	}
+	LOGE("read data");
+	//Clear
+	glClearColor(0.0, 255, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	//Y
+	//
+	glActiveTexture(GL_TEXTURE0);
 
+	glBindTexture(GL_TEXTURE_2D, id_y);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED_BITS, pixel_w, pixel_h, 0, GL_RED_BITS,
+			GL_UNSIGNED_BYTE, plane[0]);
+
+	glUniform1i(textureUniformY, 0);
+	//U
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, id_u);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED_BITS, pixel_w / 2, pixel_h / 2, 0, GL_RED_BITS,
+			GL_UNSIGNED_BYTE, plane[1]);
+	glUniform1i(textureUniformU, 1);
+	//V
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, id_v);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED_BITS, pixel_w / 2, pixel_h / 2, 0, GL_RED_BITS,
+			GL_UNSIGNED_BYTE, plane[2]);
+	glUniform1i(textureUniformV, 2);
+
+	// Draw
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	// Show
+	glFlush();
 }
 
 JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceChanged(
@@ -153,9 +194,9 @@ JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceChanged
 	//Set Arrays
 	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, vertexVertices);
 	//Enable it
-	glEnableVertexAttribArray (ATTRIB_VERTEX);
+	glEnableVertexAttribArray(ATTRIB_VERTEX);
 	glVertexAttribPointer(ATTRIB_TEXTURE, 2, GL_FLOAT, 0, 0, textureVertices);
-	glEnableVertexAttribArray (ATTRIB_TEXTURE);
+	glEnableVertexAttribArray(ATTRIB_TEXTURE);
 
 	//Init Texture
 	glGenTextures(1, &id_y);
@@ -186,4 +227,14 @@ JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceChanged
 JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceCreated(
 		JNIEnv *env, jclass clazz) {
 
+}
+
+JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSetFilePath(
+		JNIEnv *env, jclass clazz, jstring path) {
+	fp = fopen(env->GetStringUTFChars(path, NULL), "rb");
+	if(!fp){
+		LOGE("fopen failed.");
+	}else{
+		LOGI("file open.");
+	}
 }

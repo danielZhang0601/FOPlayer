@@ -1,5 +1,7 @@
 package com.zxd.showyuv;
 
+import java.io.File;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
@@ -9,6 +11,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -30,6 +33,15 @@ public class MainActivity extends Activity {
 		glSurfaceView.setRenderer(new Renderer());
 		layout.addView(glSurfaceView, dm.widthPixels, dm.widthPixels * 9 / 16);
 		setContentView(layout);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		NativeMethods.onNativeSetFilePath(Environment
+				.getExternalStorageDirectory().toString()
+				+ File.separator
+				+ "test_yuv420p_320x180.yuv");
 	}
 
 	@Override

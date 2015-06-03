@@ -31,6 +31,14 @@ JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceChanged
 JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceCreated
   (JNIEnv *, jclass);
 
+/*
+ * Class:     com_zxd_showyuv_NativeMethods
+ * Method:    onNativeSetFilePath
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSetFilePath
+  (JNIEnv *, jclass, jstring);
+
 #ifdef __cplusplus
 }
 #endif
