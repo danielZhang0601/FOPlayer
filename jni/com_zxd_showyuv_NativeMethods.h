@@ -9,34 +9,26 @@ extern "C" {
 #endif
 /*
  * Class:     com_zxd_showyuv_NativeMethods
- * Method:    onNativeDrawFrame
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeDrawFrame
-  (JNIEnv *, jclass);
-
-/*
- * Class:     com_zxd_showyuv_NativeMethods
- * Method:    onNativeSurfaceChanged
+ * Method:    init
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceChanged
+JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_init
   (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     com_zxd_showyuv_NativeMethods
- * Method:    onNativeSurfaceCreated
+ * Method:    step
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSurfaceCreated
+JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_step
   (JNIEnv *, jclass);
 
 /*
  * Class:     com_zxd_showyuv_NativeMethods
- * Method:    onNativeSetFilePath
+ * Method:    decodeOneFrame
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_onNativeSetFilePath
+JNIEXPORT void JNICALL Java_com_zxd_showyuv_NativeMethods_decodeOneFrame
   (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus

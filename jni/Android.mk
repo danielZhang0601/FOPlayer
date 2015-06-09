@@ -34,4 +34,6 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := showYUV
 LOCAL_SRC_FILES := ShowYUV.cpp
 LOCAL_LDLIBS    := -llog -lGLESv2
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/FFmpeg/include
+LOCAL_SHARED_LIBRARIES := avcodec avfilter avformat avutil swresample swscale
 include $(BUILD_SHARED_LIBRARY)
